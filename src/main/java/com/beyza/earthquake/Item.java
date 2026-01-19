@@ -23,4 +23,16 @@ public class Item implements Weighable{
 	public String toString(){
 		return name;	
 	}
+
+	public void setCost(double c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public double getCost() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
 }
