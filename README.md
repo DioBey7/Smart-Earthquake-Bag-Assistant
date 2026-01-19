@@ -6,34 +6,36 @@
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Status](https://img.shields.io/badge/Status-Completed-success.svg)
 
-**Akıllı Deprem Çantası Planlama Asistanı**, bireylerin ve ailelerin afet hazırlık süreçlerini bilimsel, sistematik ve bütçe dostu bir şekilde yönetmelerini sağlayan kapsamlı bir Java masaüstü uygulamasıdır. AFAD standartlarına uygun olarak geliştirilen bu proje, ağırlık optimizasyonu, maliyet analizi ve hayatta kalma puanlaması yaparak kullanıcıya rehberlik eder.
+**Akıllı Deprem Çantası Planlama Asistanı**, bireylerin ve ailelerin afet hazırlık süreçlerini bilimsel, sistematik ve bütçe dostu bir şekilde yönetmelerini sağlayan kapsamlı bir Java masaüstü uygulamasıdır. AFAD standartlarına ve risk seviyelerine uygun olarak geliştirilen bu proje, ağırlık optimizasyonu, maliyet analizi ve hayatta kalma puanlaması yaparak kullanıcıya rehberlik eder.
 
 ---
 
 ## 🎯 Projenin Amacı (Project Goal)
 
-Bu projenin temel amacı, hayati öneme sahip olan deprem çantası hazırlama sürecini **dijitalleştirmek**, **hatasız hale getirmek** ve **farkındalık yaratmaktır**. Uygulama, kullanıcıların çantalarını gereksiz ağırlıklarla doldurmasını engeller ve yaş/sağlık durumuna göre (Bebek, Yaşlı, Kronik Hasta vb.) özelleştirilmiş, gerçekçi ihtiyaç listeleri oluşturulmasını sağlar.
+Bu projenin temel amacı, hayati öneme sahip olan deprem çantası hazırlama sürecini **dijitalleştirmek**, **hatasız hale getirmek** ve **farkındalık yaratmaktır**. Uygulama, kullanıcının bulunduğu bölgenin risk seviyesine (Yüksek/Orta/Düşük) ve aile bireylerinin özel durumlarına (Bebek, Yaşlı, Kronik Hasta vb.) göre dinamik ve hayat kurtarıcı listeler oluşturur.
 
 ---
 
 ## 🚀 Temel Özellikler (Key Features)
 
-### 1. 👥 Gelişmiş Profil Yönetimi & Aile Modu
-* **Bireysel Mod:** Tek bir kişi için detaylı çanta planlaması ve optimizasyonu.
-* **Aile Modu:** Tüm aile bireylerini (Anne, Baba, Çocuk, Bebek vb.) tek ekranda yönetme ve toplam aile yükünü hesaplama.
-* **Akıllı Kategoriler:** Yetişkin (15kg), Çocuk (10kg), Bebek (5kg), Yaşlı (12kg) ve Kronik Hasta (10kg) profillerine göre otomatik ağırlık limitleri.
+### 1. 👥 Gelişmiş Profil ve Risk Yönetimi
+* **Risk Bazlı Planlama:** Bölgenin deprem riskine göre (Yüksek, Orta, Düşük) otomatik olarak su ve gıda stoklarını ayarlar.
+* **Akıllı Kategoriler:** * **Bebek:** Bez, mama, ıslak mendil gibi özel ihtiyaçlar otomatik eklenir.
+  * **Yaşlı:** İlaç kutusu, baston, yedek gözlük gibi gereksinimler otomatik eklenir.
+  * **Kronik Hasta:** İlaçlar, reçete kopyaları ve yedek piller listeye dahil edilir.
+* **Aile Modu:** Tüm aile bireylerini tek ekranda yönetme ve toplam aile yükünü hesaplama.
 
 ### 2. 🧠 Akıllı Analiz Algoritmaları
-* **Hayatta Kalma Skoru (Survival Score):** Çantadaki ürünleri (Su, Gıda, Işık, İlk Yardım, Düdük) analiz ederek 0-100 arası bir hazırlık puanı verir ve eksikleri raporlar.
+* **Hayatta Kalma Skoru (Survival Score):** Çantadaki kritik ürünleri (Su, Gıda, Işık, İlk Yardım, Düdük) analiz ederek 0-100 arası bir hazırlık puanı verir.
 * **Akıllı Eksik Tespiti:** Çantada hayati öneme sahip eksikleri (Örn: "Düdük yok!", "Su yetersiz!") anlık olarak tespit eder ve kullanıcıyı uyarır.
-* **Dinamik Kapasite Kontrolü:** Her profilin taşıyabileceği maksimum ağırlığı (Weight Limit) anlık olarak denetler ve aşım durumunda uyarır.
+* **Dinamik Kapasite Kontrolü:** Her profilin taşıyabileceği maksimum ağırlığı (Weight Limit) anlık olarak denetler.
 
 ### 3. 💰 Bütçe ve Maliyet Takibi
 * Eklenen her ürünün tahmini maliyeti girilerek, bireysel ve toplam aile çantasının maliyeti hesaplanır. Afet hazırlığının bütçeye etkisi anlık olarak takip edilebilir.
 
 ### 4. 🌍 Çoklu Dil Desteği & UX
 * **TR / EN Desteği:** Tek tıkla Türkçe ve İngilizce arayüz arasında geçiş (Para birimleri TL / $ olarak otomatik güncellenir).
-* **Modern Arayüz (GUI):** Java Swing ile geliştirilmiş; renk kodlu ilerleme çubukları (Progress Bars), sekmeli yapı ve kullanıcı dostu bir deneyim.
+* **Modern Arayüz (GUI):** Java Swing ile geliştirilmiş; renk kodlu ilerleme çubukları (Progress Bars), sekmeli yapı ve hata korumalı (Error-Safe) kullanıcı deneyimi.
 
 ### 5. 💾 Veri Yönetimi ve Raporlama
 * **Geçmiş Kayıtlar:** Oluşturulan tüm bireysel ve aile planları tarihçesiyle birlikte saklanır.
@@ -58,6 +60,7 @@ Bu projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımlar�
 ### Gereksinimler
 * Bilgisayarınızda **Java Development Kit (JDK 8 veya üzeri)** kurulu olmalıdır.
 
+
 ### Adım 1: Projeyi Klonlayın
 Terminal veya Komut Satırını açın ve şu komutu yazın:
 ```bash
@@ -78,8 +81,17 @@ git clone [https://github.com/DioBey7/Smart-Earthquake-Bag-Assistant.git](https:
 
 3. Açılan pencerede dil seçimi yapıp (TR/EN) çantanızı hazırlamaya başlayabilirsiniz!
 
+
 ## 📸 Ekran Görüntüleri (Screenshots)
 
+<div align="center">
+  <img src="screenshots/mainmenu.png" width="700" alt="Uygulama Ana Ekranı" />
+  <img src="screenshots/addingitems.png" width="700" alt="İtem Ekleme" />
+  <img src="screenshots/listingfamilyitems.png" width="700" alt="Aile İtemlerini Listeleme" />
+  <img src="screenshots/listingindividualbag" width="700" alt="Bireysel Çanta Menüsü" />
+  <img src="screenshots/mainmenu2.png" width="700" alt="Uygulama Ana Ekranı 2" />
+  <img src="screenshots/familymenu.png" width="700" alt="Aile Menüsü" />
+</div>
 
 ## 📈 Geliştirme Süreci (Development Journey)
 Bu proje, yazılım geliştirme yaşam döngüsünü (SDLC) simüle etmek amacıyla iteratif bir yaklaşımla geliştirilmiştir:
@@ -92,7 +104,7 @@ Bu proje, yazılım geliştirme yaşam döngüsünü (SDLC) simüle etmek amacı
 
 4. v4.0 (Algoritma Entegrasyonu): "Hayatta Kalma Skoru" ve "Akıllı Eksik Tespiti" algoritmaları sisteme entegre edildi.
 
-5. Final (UX & Optimizasyon): Aile modu, bütçe takibi, İngilizce dil desteği ve estetik (Flat Design) iyileştirmeleri ile proje tamamlandı.
+5. Final (Risk & Aile Modu): Risk seviyelerine göre otomatik eşya atama, kategoriye özel ihtiyaçlar (Bebek/Yaşlı), bütçe takibi ve estetik (Flat Design) iyileştirmeleri ile proje tamamlandı.
 
 ## 🤝 İletişim
 Geliştirici: Beyza Yazıcı
