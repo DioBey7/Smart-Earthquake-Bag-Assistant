@@ -2,9 +2,9 @@ package com.beyza.earthquake;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -33,9 +33,11 @@ public class MainGUI extends JFrame {
     
     private JTextField indNameField;
     private JComboBox<String> indProfileBox;
+    private JComboBox<String> indRiskBox;
     private JTextField indItemNameField, indItemWeightField, indItemCostField;
     private JProgressBar indProgressBar;
     private DefaultTableModel indTableModel;
+    private JTable indTable;
     private JTextArea indMissingArea;
     private JProgressBar survivalProgressBar;
     private JPanel indScorePanel;
@@ -46,16 +48,18 @@ public class MainGUI extends JFrame {
     private JList<String> familyMemberList;
     private JTextField famMemberNameField;
     private JComboBox<String> famMemberTypeBox;
+    private JComboBox<String> famRiskBox;
     private JButton btnAddMem, btnRemMem;
     
     private JPanel famEditorPanel;
     private JPanel leftMemberPanel; 
     private JTextField famItemNameField, famItemWeightField, famItemCostField;
     private DefaultTableModel famBagTableModel;
+    private JTable famTable;
     private JProgressBar famMemberProgressBar;
     private JLabel famMemberStatusLabel;
     private JTextArea famMissingArea;
-    private JButton btnFamAdd, btnFamDel, btnFamBasic;
+    private JButton btnFamAdd, btnFamDel;
     
     private JList<SavedRecord> historyList;
     private JTextArea historyDetailsArea;
@@ -63,7 +67,7 @@ public class MainGUI extends JFrame {
     private JPanel histListPanel, histDetailPanel;
     private JPanel indEditorPanel;
     
-    private JLabel lblFamNameInput, lblFamTypeInput;
+    private JLabel lblFamNameInput, lblFamTypeInput, lblFamRisk;
     private JLabel lblFamProd, lblFamKg, lblFamCost;
     
     private TitledBorder borderIndEditor, borderScore, borderFamMembers, borderFamBag, borderHistList, borderHistDetail;
@@ -148,13 +152,14 @@ public class MainGUI extends JFrame {
         dict.put("lbl_profile", new String[]{"Profil Tipi:", "Profile Type:"});
         dict.put("btn_apply", new String[]{"Profili Uygula", "Apply Profile"});
         dict.put("lbl_fill", new String[]{"Doluluk:", "Capacity:"});
+        dict.put("lbl_risk", new String[]{"Risk Seviyesi:", "Risk Level:"});
         
         dict.put("lbl_prod", new String[]{"Ürün Adı:", "Item Name:"});
         dict.put("lbl_kg", new String[]{"Ağırlık (kg):", "Weight (kg):"});
         dict.put("lbl_cost", new String[]{"Maliyet:", "Cost:"});
         dict.put("btn_add", new String[]{"Ekle", "Add Item"});
         dict.put("btn_del", new String[]{"Seçileni Sil", "Delete Selected"});
-        dict.put("btn_basic", new String[]{"AFAD Temel Seti Yükle", "Load Basic Kit"});
+        dict.put("btn_basic", new String[]{"Risk & Profil Eşyalarını Yükle", "Load Risk & Profile Items"});
         dict.put("btn_save", new String[]{"Çantayı Kaydet", "Save Bag"});
         
         dict.put("col_prod", new String[]{"Ürün", "Item"});
@@ -179,12 +184,20 @@ public class MainGUI extends JFrame {
         dict.put("msg_err", new String[]{"Hata:", "Error:"});
         dict.put("msg_full", new String[]{"Çanta Kapasitesi Doldu!", "Bag Capacity Full!"});
         dict.put("msg_num", new String[]{"Lütfen geçerli sayı giriniz.", "Please enter valid numbers."});
+        dict.put("msg_empty", new String[]{"Çanta boş! Kaydedilecek bir şey yok.", "The bag is empty! Nothing to save."});
+        dict.put("msg_no_member", new String[]{"Lütfen listeden bir aile bireyi seçin.", "Please select a family member from the list."});
+        dict.put("msg_no_sel", new String[]{"Lütfen silinecek bir satır seçin.", "Please select a row to delete."});
+        dict.put("msg_name_req", new String[]{"Lütfen bir isim girin.", "Please enter a name."});
         
         dict.put("p_adult", new String[]{"Yetişkin (15kg)", "Adult (15kg)"});
         dict.put("p_child", new String[]{"Çocuk (10kg)", "Child (10kg)"});
         dict.put("p_baby", new String[]{"Bebek (5kg)", "Baby (5kg)"});
         dict.put("p_elder", new String[]{"Yaşlı (12kg)", "Elderly (12kg)"});
         dict.put("p_chronic", new String[]{"Kronik Hasta (10kg)", "Chronic Patient (10kg)"});
+        
+        dict.put("r_high", new String[]{"YÜKSEK (High)", "HIGH"});
+        dict.put("r_medium", new String[]{"ORTA (Medium)", "MEDIUM"});
+        dict.put("r_low", new String[]{"DÜŞÜK (Low)", "LOW"});
         
         dict.put("lbl_mem_name", new String[]{"Birey Adı:", "Member Name:"});
         dict.put("lbl_mem_type", new String[]{"Birey Tipi:", "Member Type:"});
@@ -233,7 +246,7 @@ public class MainGUI extends JFrame {
         btnBasic.setText(t("btn_basic"));
         btnSave.setText(t("btn_save"));
         
-        indTableModel.setColumnIdentifiers(new String[]{t("col_prod"), t("col_kg"), t("col_cost"), t("col_cat")});
+        indTableModel.setColumnIdentifiers(new String[]{t("col_prod"), t("col_kg"), t("col_cost") + " (" + t("currency") + ")", t("col_cat")});
         
         famHeaderLabel.setText(t("fam_name"));
         btnSaveFamily.setText(t("btn_fam_save"));
@@ -241,6 +254,7 @@ public class MainGUI extends JFrame {
         
         lblFamNameInput.setText(t("lbl_mem_name"));
         lblFamTypeInput.setText(t("lbl_mem_type"));
+        lblFamRisk.setText(t("lbl_risk"));
         
         btnAddMem.setText(t("btn_add_mem"));
         btnRemMem.setText(t("btn_rem_mem"));
@@ -261,13 +275,14 @@ public class MainGUI extends JFrame {
         
         btnFamAdd.setText(t("btn_add"));
         btnFamDel.setText(t("btn_del"));
-        btnFamBasic.setText(t("btn_basic"));
         
         btnClearHistory.setText(t("btn_clear"));
         btnExportHistory.setText(t("btn_export"));
         
         updateComboBoxes(indProfileBox);
         updateComboBoxes(famMemberTypeBox);
+        updateRiskBoxes(indRiskBox);
+        updateRiskBoxes(famRiskBox);
         
         updateIndividualStatus();
         if(selectedFamilyMember != null) updateFamilyUI();
@@ -288,6 +303,17 @@ public class MainGUI extends JFrame {
         if(idx >= 0 && idx < box.getItemCount()) box.setSelectedIndex(idx);
         else box.setSelectedIndex(0);
     }
+    
+    private void updateRiskBoxes(JComboBox<String> box) {
+        if(box == null) return;
+        int idx = box.getSelectedIndex();
+        box.removeAllItems();
+        box.addItem(t("r_high"));
+        box.addItem(t("r_medium"));
+        box.addItem(t("r_low"));
+        if(idx >= 0 && idx < box.getItemCount()) box.setSelectedIndex(idx);
+        else box.setSelectedIndex(0);
+    }
 
     private JPanel createIndividualPanel() {
         JPanel panel = new JPanel(new BorderLayout(15, 15));
@@ -300,7 +326,7 @@ public class MainGUI extends JFrame {
         
         lblName = new JLabel(t("lbl_name"));
         topPanel.add(lblName);
-        indNameField = new JTextField(15);
+        indNameField = new JTextField(10);
         indNameField.setFont(FONT_NORMAL);
         topPanel.add(indNameField);
         
@@ -311,6 +337,11 @@ public class MainGUI extends JFrame {
         updateComboBoxes(indProfileBox);
         topPanel.add(indProfileBox);
         
+        topPanel.add(new JLabel("Risk:"));
+        indRiskBox = new JComboBox<>();
+        updateRiskBoxes(indRiskBox);
+        topPanel.add(indRiskBox);
+        
         btnApplyProfile = createButton(t("btn_apply"), CLR_BLUE);
         btnApplyProfile.addActionListener(e -> updateIndividualProfile());
         topPanel.add(btnApplyProfile);
@@ -319,7 +350,7 @@ public class MainGUI extends JFrame {
         topPanel.add(lblDoluluk);
         indProgressBar = new JProgressBar(0, 100);
         indProgressBar.setStringPainted(true);
-        indProgressBar.setPreferredSize(new Dimension(200, 30));
+        indProgressBar.setPreferredSize(new Dimension(150, 30));
         indProgressBar.setForeground(CLR_GREEN);
         topPanel.add(indProgressBar);
 
@@ -374,7 +405,7 @@ public class MainGUI extends JFrame {
         
         indEditorPanel.add(Box.createVerticalStrut(20));
         btnBasic = createButton(t("btn_basic"), CLR_ORANGE);
-        btnBasic.addActionListener(e -> loadBasicItems(individualBag, indTableModel, this::updateIndividualStatus));
+        btnBasic.addActionListener(e -> autoLoadItems(individualBag, indTableModel, indRiskBox.getSelectedIndex(), indProfileBox.getSelectedIndex(), this::updateIndividualStatus));
         indEditorPanel.add(btnBasic);
         
         indEditorPanel.add(Box.createVerticalStrut(5));
@@ -416,13 +447,13 @@ public class MainGUI extends JFrame {
         indTableModel = new DefaultTableModel(cols, 0) {
             public boolean isCellEditable(int row, int col) { return false; }
         };
-        JTable table = new JTable(indTableModel);
-        table.setRowHeight(30);
-        table.setFont(FONT_NORMAL);
-        table.getTableHeader().setFont(FONT_BOLD);
-        table.setSelectionBackground(new Color(220, 240, 255));
-        table.setSelectionForeground(Color.BLACK);
-        centerPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+        indTable = new JTable(indTableModel);
+        indTable.setRowHeight(30);
+        indTable.setFont(FONT_NORMAL);
+        indTable.getTableHeader().setFont(FONT_BOLD);
+        indTable.setSelectionBackground(new Color(220, 240, 255));
+        indTable.setSelectionForeground(Color.BLACK);
+        centerPanel.add(new JScrollPane(indTable), BorderLayout.CENTER);
 
         panel.add(centerPanel, BorderLayout.CENTER);
 
@@ -475,8 +506,9 @@ public class MainGUI extends JFrame {
                 FONT_TITLE, CLR_DARK);
         leftMemberPanel.setBorder(BorderFactory.createCompoundBorder(borderFamMembers, new EmptyBorder(5,5,5,5)));
         
-        JPanel addMemPanel = new JPanel(new GridLayout(3, 2, 5, 5));
+        JPanel addMemPanel = new JPanel(new GridLayout(4, 2, 5, 5));
         addMemPanel.setBackground(CLR_PANEL_BG);
+        
         lblFamNameInput = new JLabel(t("lbl_mem_name"));
         addMemPanel.add(lblFamNameInput);
         famMemberNameField = new JTextField();
@@ -487,6 +519,12 @@ public class MainGUI extends JFrame {
         famMemberTypeBox = new JComboBox<>();
         updateComboBoxes(famMemberTypeBox);
         addMemPanel.add(famMemberTypeBox);
+        
+        lblFamRisk = new JLabel(t("lbl_risk"));
+        addMemPanel.add(lblFamRisk);
+        famRiskBox = new JComboBox<>();
+        updateRiskBoxes(famRiskBox);
+        addMemPanel.add(famRiskBox);
         
         btnAddMem = createButton(t("btn_add_mem"), CLR_GREEN);
         btnAddMem.addActionListener(e -> addFamilyMember());
@@ -529,12 +567,6 @@ public class MainGUI extends JFrame {
         btnFamAdd.addActionListener(e -> addFamilyItem());
         btnFamDel = createButton(t("btn_del"), CLR_RED);
         btnFamDel.addActionListener(e -> deleteFamilyItem());
-        btnFamBasic = createButton(t("btn_basic"), CLR_ORANGE);
-        btnFamBasic.addActionListener(e -> {
-            if(selectedFamilyMember != null) {
-                loadBasicItems(selectedFamilyMember.bag, famBagTableModel, this::updateFamilyUI);
-            }
-        });
 
         lblFamProd = new JLabel(t("lbl_prod"));
         famEditTop.add(lblFamProd);
@@ -548,12 +580,11 @@ public class MainGUI extends JFrame {
         
         famEditTop.add(btnFamAdd);
         famEditTop.add(btnFamDel);
-        famEditTop.add(btnFamBasic);
         
         famEditorPanel.add(famEditTop, BorderLayout.NORTH);
 
         famBagTableModel = new DefaultTableModel(new String[]{t("col_prod"), t("col_kg"), t("col_cost") + " (" + t("currency") + ")", t("col_cat")}, 0);
-        JTable famTable = new JTable(famBagTableModel);
+        famTable = new JTable(famBagTableModel);
         famTable.setRowHeight(25);
         famTable.getTableHeader().setFont(FONT_BOLD);
         famEditorPanel.add(new JScrollPane(famTable), BorderLayout.CENTER);
@@ -682,9 +713,11 @@ public class MainGUI extends JFrame {
     }
 
     private void deleteIndividualItem() {
-        JTable table = (JTable)((JScrollPane)((JPanel)indEditorPanel.getComponent(1)).getComponent(1)).getViewport().getView();
-        int row = table.getSelectedRow();
-        if(row == -1) return;
+        int row = indTable.getSelectedRow();
+        if(row == -1) {
+            JOptionPane.showMessageDialog(this, t("msg_no_sel"));
+            return;
+        }
         
         String name = (String) indTableModel.getValueAt(row, 0);
         double w = (double) indTableModel.getValueAt(row, 1);
@@ -723,7 +756,7 @@ public class MainGUI extends JFrame {
             String n = i.getName().toLowerCase();
             if(n.contains("su") || n.contains("water")) score += 30;
             if(n.contains("gıda") || n.contains("food") || n.contains("konserve")) score += 20;
-            if(n.contains("fener") || n.contains("light")) score += 15;
+            if(n.contains("fener") || n.contains("light") || n.contains("torch")) score += 15;
             if(n.contains("düdük") || n.contains("whistle")) score += 10;
             if(n.contains("ilk yardım") || n.contains("aid")) score += 15;
             if(n.contains("radyo") || n.contains("radio")) score += 10;
@@ -739,15 +772,19 @@ public class MainGUI extends JFrame {
         } else {
             bar.setForeground(CLR_GREEN);
         }
-        if(bar.getParent() != null && ((JComponent) bar.getParent()).getBorder() != null)
+        if(bar.getParent() != null && ((JComponent) bar.getParent()).getBorder() instanceof TitledBorder)
             ((TitledBorder)((JComponent) bar.getParent()).getBorder()).setTitle(title);
         if(bar.getParent() != null) bar.getParent().repaint();
     }
 
     private void addFamilyMember() {
         String name = famMemberNameField.getText();
-        if(name.isEmpty()) return;
+        if(name.isEmpty()) {
+            JOptionPane.showMessageDialog(this, t("msg_name_req"));
+            return;
+        }
         int typeIdx = famMemberTypeBox.getSelectedIndex();
+        int riskIdx = famRiskBox.getSelectedIndex();
         String typeName = (String)famMemberTypeBox.getSelectedItem();
         double cap = getCapacityByIndex(typeIdx);
         
@@ -757,7 +794,7 @@ public class MainGUI extends JFrame {
         famMemberNameField.setText("");
         updateFamilyTotalWeight();
         
-        loadBasicItems(member.bag, null, null);
+        autoLoadItems(member.bag, null, riskIdx, typeIdx, null);
     }
 
     private void onFamilyMemberSelected(ListSelectionEvent e) {
@@ -798,7 +835,10 @@ public class MainGUI extends JFrame {
     }
 
     private void addFamilyItem() {
-        if(selectedFamilyMember == null) return;
+        if(selectedFamilyMember == null) {
+            JOptionPane.showMessageDialog(this, t("msg_no_member"));
+            return;
+        }
         try {
             String name = famItemNameField.getText();
             double w = Double.parseDouble(famItemWeightField.getText());
@@ -819,10 +859,15 @@ public class MainGUI extends JFrame {
     }
 
     private void deleteFamilyItem() {
-        if(selectedFamilyMember == null) return;
-        JTable table = (JTable)((JScrollPane)famEditorPanel.getComponent(1)).getViewport().getView();
-        int row = table.getSelectedRow();
-        if(row == -1) return;
+        if(selectedFamilyMember == null) {
+            JOptionPane.showMessageDialog(this, t("msg_no_member"));
+            return;
+        }
+        int row = famTable.getSelectedRow();
+        if(row == -1) {
+            JOptionPane.showMessageDialog(this, t("msg_no_sel"));
+            return;
+        }
         
         String name = (String) famBagTableModel.getValueAt(row, 0);
         double w = (double) famBagTableModel.getValueAt(row, 1);
@@ -839,6 +884,8 @@ public class MainGUI extends JFrame {
             famEditorPanel.setVisible(false);
             selectedFamilyMember = null;
             updateFamilyTotalWeight();
+        } else {
+            JOptionPane.showMessageDialog(this, t("msg_no_member"));
         }
     }
     
@@ -853,7 +900,10 @@ public class MainGUI extends JFrame {
     }
 
     private void saveIndividualBag() {
-        if(individualBag.getItems().isEmpty()) return;
+        if(individualBag.getItems().isEmpty()) {
+            JOptionPane.showMessageDialog(this, t("msg_empty"));
+            return;
+        }
         String name = indNameField.getText().isEmpty() ? "No Name" : indNameField.getText();
         String type = (String)indProfileBox.getSelectedItem();
         
@@ -865,7 +915,10 @@ public class MainGUI extends JFrame {
     }
     
     private void saveFamilyGroup() {
-        if(currentFamilyMembers.isEmpty()) return;
+        if(currentFamilyMembers.isEmpty()) {
+            JOptionPane.showMessageDialog(this, t("msg_empty"));
+            return;
+        }
         String famName = familyNameField.getText().isEmpty() ? "Family" : familyNameField.getText();
         
         SavedRecord record = new SavedRecord(famName, "Aile/Family", "Group");
@@ -913,7 +966,10 @@ public class MainGUI extends JFrame {
     
     private void exportHistoryToTxt() {
         SavedRecord r = historyList.getSelectedValue();
-        if(r == null) return;
+        if(r == null) {
+            JOptionPane.showMessageDialog(this, t("msg_no_sel"));
+            return;
+        }
         
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(r.recordName + "_Plan.txt"))) {
             writer.write(historyDetailsArea.getText());
@@ -921,34 +977,65 @@ public class MainGUI extends JFrame {
         } catch (IOException e) { e.printStackTrace(); }
     }
 
-    private void loadBasicItems(EmergencyBag bag, DefaultTableModel model, Runnable updateCallback) {
-        Object[][] basics = {
-            {"Su (1.5L) / Water", 1.5, 10.0, "Hayati"},
-            {"Konserve / Canned Food", 0.8, 50.0, "Gıda"},
-            {"Fener / Flashlight", 0.3, 100.0, "Işık"},
-            {"Düdük / Whistle", 0.1, 20.0, "Güvenlik"},
-            {"İlk Yardım / First Aid", 0.6, 250.0, "Sağlık"},
-            {"Powerbank", 0.3, 300.0, "Tekno"},
-            {"Maske / Mask", 0.1, 10.0, "Güvenlik"},
-            {"Radyo / Radio", 0.5, 400.0, "İletişim"},
-            {"Battaniye / Blanket", 0.8, 150.0, "Isı"},
-            {"Çakı / Knife", 0.2, 100.0, "Araç"}
-        };
+    private void autoLoadItems(EmergencyBag bag, DefaultTableModel model, int riskIdx, int categoryIdx, Runnable updateCallback) {
         
-        for(Object[] item : basics) {
-            try {
-                String name = (String)item[0];
-                double w = (double)item[1];
-                double c = (double)item[2];
-                
-                Item ni = new Item(name, w);
-                ni.setCost(c);
-                bag.addItem(ni);
-                
-                if(model != null) model.addRow(new Object[]{name, w, c, item[3]});
-            } catch(Exception e) {}
+        Object[][] baseHigh = {
+            {"Water 1.5L", 1.5, 10.0, "Risk: High"}, {"Water 1.5L", 1.5, 10.0, "Risk: High"}, {"Water 1.5L", 1.5, 10.0, "Risk: High"},
+            {"Tinned food", 0.5, 50.0, "Risk: High"}, {"Tinned food", 0.5, 50.0, "Risk: High"},
+            {"Torch", 0.3, 100.0, "Risk: High"}, {"Powerbank", 0.4, 300.0, "Risk: High"},
+            {"First aid kit", 0.8, 250.0, "Risk: High"}, {"Thermal blanket", 1.0, 150.0, "Risk: High"}
+        };
+        Object[][] baseMedium = {
+            {"Water 1.5L", 1.5, 10.0, "Risk: Medium"}, {"Water 1.5L", 1.5, 10.0, "Risk: Medium"},
+            {"Tinned food", 0.5, 50.0, "Risk: Medium"}, {"Tinned food", 0.5, 50.0, "Risk: Medium"},
+            {"Torch", 0.3, 100.0, "Risk: Medium"}, {"Powerbank", 0.4, 300.0, "Risk: Medium"},
+            {"First aid kit", 0.8, 250.0, "Risk: Medium"}, {"Thermal blanket", 1.0, 150.0, "Risk: Medium"}
+        };
+        Object[][] baseLow = {
+            {"Water 1.5L", 1.5, 10.0, "Risk: Low"},
+            {"Tinned food", 0.5, 50.0, "Risk: Low"}, {"Tinned food", 0.5, 50.0, "Risk: Low"},
+            {"Torch", 0.3, 100.0, "Risk: Low"}, {"Powerbank", 0.4, 300.0, "Risk: Low"},
+            {"First aid kit", 0.8, 250.0, "Risk: Low"}, {"Thermal blanket", 1.0, 150.0, "Risk: Low"}
+        };
+
+        Object[][] chosenRisk = (riskIdx == 0) ? baseHigh : (riskIdx == 1) ? baseMedium : baseLow;
+        for(Object[] row : chosenRisk) addItemToBag(bag, model, row);
+
+        if(categoryIdx == 2) { 
+            Object[][] babyItems = {
+                {"Baby nappy pack", 0.8, 150.0, "Category: Baby"}, {"Baby formula", 0.5, 200.0, "Category: Baby"},
+                {"Wet wipes", 0.4, 50.0, "Category: Baby"}, {"Baby blanket", 0.6, 100.0, "Category: Baby"},
+                {"Spare baby clothes", 0.4, 120.0, "Category: Baby"}, {"Pacifier and bottle", 0.3, 80.0, "Category: Baby"}
+            };
+            for(Object[] row : babyItems) addItemToBag(bag, model, row);
+        } else if (categoryIdx == 3) { 
+            Object[][] elderlyItems = {
+                {"Medicine kit", 0.6, 100.0, "Category: Elderly"}, {"Spare glasses", 0.2, 500.0, "Category: Elderly"},
+                {"Walking stick", 0.7, 150.0, "Category: Elderly"}, {"Blood pressure monitor", 0.5, 300.0, "Category: Elderly"}
+            };
+            for(Object[] row : elderlyItems) addItemToBag(bag, model, row);
+        } else if (categoryIdx == 4) { 
+            Object[][] chronicItems = {
+                {"Chronic meds", 0.7, 50.0, "Category: Chronic"}, {"Prescription copy", 0.1, 0.0, "Category: Chronic"},
+                {"Doctor contact card", 0.05, 0.0, "Category: Chronic"}, {"Spare battery", 0.3, 100.0, "Category: Chronic"}
+            };
+            for(Object[] row : chronicItems) addItemToBag(bag, model, row);
         }
+
         if(updateCallback != null) updateCallback.run();
+    }
+
+    private void addItemToBag(EmergencyBag bag, DefaultTableModel model, Object[] row) {
+        try {
+            String name = (String)row[0];
+            double w = (double)row[1];
+            double c = (double)row[2];
+            String cat = (String)row[3];
+            Item ni = new Item(name, w);
+            ni.setCost(c);
+            bag.addItem(ni);
+            if(model != null) model.addRow(new Object[]{name, w, c, cat});
+        } catch(Exception e) {}
     }
 
     private void checkMissingItems(EmergencyBag bag, JTextArea area) {
@@ -958,8 +1045,8 @@ public class MainGUI extends JFrame {
         for(Item i : items) {
             String n = i.getName().toLowerCase();
             if(n.contains("su") || n.contains("water")) w=true;
-            if(n.contains("gıda") || n.contains("food") || n.contains("konserve")) f=true;
-            if(n.contains("fener") || n.contains("light")) l=true;
+            if(n.contains("gıda") || n.contains("food") || n.contains("konserve") || n.contains("tinned")) f=true;
+            if(n.contains("fener") || n.contains("light") || n.contains("torch")) l=true;
             if(n.contains("yardım") || n.contains("aid")) aid=true;
             if(n.contains("düdük") || n.contains("whistle")) whis=true;
         }
