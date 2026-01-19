@@ -1,6 +1,11 @@
 package com.beyza.earthquake;
 
 import org.junit.jupiter.api.Test;
+
+import com.beyza.earthquake.exception.OverweightBagException;
+import com.beyza.earthquake.model.EmergencyBag;
+import com.beyza.earthquake.model.Item;
+
 import static org.junit.jupiter.api.Assertions.*; 
 import java.util.ArrayList;
 
